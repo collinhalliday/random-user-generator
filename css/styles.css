@@ -1,0 +1,64 @@
+.grid-container {
+	border: 1px solid red;
+	display: grid;
+	grid-template-columns: 410px 410px 410px;
+	grid-template-rows: 180px 180px 180px 180px;
+	/* grid-auto-columns: 33.3% 33.3% 33.3%;
+	grid-auto-rows: 25% 25% 25% 25%; */
+	grid-column-gap: 25px;
+  grid-row-gap: 25px;
+	padding-left: 66px;
+	justify-items: stretch;
+}
+
+.grid-item {
+	border: 2px solid #d3d3d3;
+	display: block;
+	border-radius: 10px;
+	margin: 5px;
+}
+
+.image {
+	float: left;
+	border: 1px solid green;
+	display: block;
+	height: 7em;
+	width: 7em;
+	margin: 25px;
+	border-radius: 100%;
+	background-image: url("http://placeimg.com/100/100/any");
+}
+
+.text {
+	border: 1px solid green;
+	float: right;
+	margin-right: 40px;
+	margin-top: 20px;
+}
+
+.name {
+	border: 1px solid blue;
+	margin-bottom: -8px;
+	font-stretch: extra-expanded;
+	font-weight: bold;
+	font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+	font-size: 20px;
+}
+
+.email,
+.city {
+	font-size: 15px;
+	font-family: Helvetica;
+	font-weight: normal;
+	color: grey;
+}
+
+.email {
+	border: 1px solid orange;
+	margin-bottom: -10px;
+
+}
+
+.city {
+	border: 1px solid purple;
+}
