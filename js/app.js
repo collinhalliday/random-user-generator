@@ -5,7 +5,7 @@ $(document).ready(function() {
       url: randomEmployeeGeneratorAPI,
       dataType: 'json',
       results: '12',
-      inc: 'name, location, email'
+      inc: 'name, location, email, picture'
     }
 
     /*
@@ -25,7 +25,7 @@ $(document).ready(function() {
       var gridHTML = '';
       $.each(data.results, function(index, employee) {
         gridHTML += '<div class="grid-item">';
-        gridHTML += '<div class="image"></div>';
+        gridHTML += '<div class="image" style="background-image: url(' + employee.picture.large + ')"></div>';
         gridHTML += '<div class="text">';
         gridHTML += '<p class="name">' + employee.name.first + ' ' + employee.name.last + '<p>';
         gridHTML += '<p class="email">' + employee.email + '<p>';
