@@ -6,6 +6,7 @@
     const randomEmployeeGeneratorAPI = 'https://randomuser.me/api/';
     const employeeGrid = document.getElementsByClassName('grid-container');
     let employeeData;
+    let employeeDataPopulated = false;
     const $searchField = $('#search');
     const $submitButton = $('#submit');
     let searchTerm;
@@ -26,9 +27,13 @@
       console.log(data);
       if(data.error) {
         let errorMessage = '<p>' + data.error + '</p>';
+        $('.grid-container').html(errorMessage);
       } else {
           let gridHTML = '';
-          employeeData = data.results;
+          if(!employeeDataPopulated) {
+            employeeData = data.results;
+            employeeDataPopulated = true;
+          }
           console.log(employeeData);
           $.each(data.results, function(index, employee) {
             gridHTML += '<div class="grid-item">';
@@ -128,29 +133,22 @@
 
     //Event Listener: Employee search code
     $('.search-form').submit(function (event) {
+      $('.modal').remove();
       $('.search-message').remove();
       searchTerm = $searchField.val();
       event.preventDefault();
       if(searchTerm === ''){
-        createSearchMessage('<p>Please enter a valid search term.</p>');
+        createSearchItem('<p>Please enter a valid search term.</p>');
       } else {
           $searchField.prop("disabled", true);
           $submitButton.attr("disabled", true).val("Searching...");
-          let searchOptions = {
-            url: randomEmployeeGeneratorAPI,
-            dataType: 'json',
-            results: '5000',
-            nat: 'au,gb,ie,nl,nz,us',
-            inc: 'name, location, email, picture, dob, cell, nat, login',
-            }
-          $.getJSON(randomEmployeeGeneratorAPI, searchOptions, employeeSearch);
-          $('.search-message').remove();
+          employeeSearch(employeeData);
       }
     }); // end click
 
     function employeeSearch(data) {
           filteredEmployees = {results: []};
-          $.each(data.results, function(index, value) {
+          $.each(data, function(index, value) {
             let name = value.name.first + ' ' + value.name.last;
             if(name.includes(searchTerm.toLowerCase()) ||
                value.login.username.includes(searchTerm.toLowerCase())) {
@@ -161,16 +159,28 @@
           $searchField.prop("disabled", false);
           $submitButton.attr("disabled", false).val("Search");
           if (filteredEmployees.results.length === 0) {
-            createSearchMessage('<p>Sorry, there are no employees that match the search term: ' + '"' + searchTerm + '"</p>');
+            createSearchItem('<p>Sorry, there are no employees that match the search term: ' + '"' + searchTerm + '"</p>');
           } else {
-             createSearchMessage('<p>Your search for "' + searchTerm + '" produced ' +
+             createSearchItem('<p>Your search for "' + searchTerm + '" produced ' +
              filteredEmployees.results.length + ' results.</p>');
           }
+          let exitButton = document.createElement('button');
+          exitButton.type = 'button';
+          exitButton.className = 'exit-search';
+          exitButton.textContent = 'Exit Search';
+          $('.exit-search').remove();
+          $('form').after(exitButton);
+          $('.exit-search').on('click', function() {
+            $('.modal').remove();
+            $('.exit-search').remove();
+            $('.search-message').remove();
+            displayEmployees({results: employeeData});
+          });
     }
 
-    function createSearchMessage(message) {
+    function createSearchItem(item) {
       let messageDiv = document.createElement('div');
-      $(messageDiv).html(message);
+      $(messageDiv).html(item);
       messageDiv.className = 'search-message';
       searchDiv.appendChild(messageDiv);
     }
