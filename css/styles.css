@@ -1,8 +1,10 @@
+/*************************************************** HEADER *******************************************************/
 h2 {
 	margin-left: 3.5%;
 	font-weight: lighter;
 }
 
+/*************************************************** GRID **********************************************************/
 .grid-container {
 	max-width: 95%;
 	display: grid;
@@ -39,6 +41,10 @@ h2 {
 	font-weight: bold;
 	font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
 	font-size: 20px;
+}
+
+.name,
+.city {
 	text-transform: capitalize;
 }
 
@@ -56,4 +62,109 @@ h2 {
 
 .city {
 	font-size: 15px;
+}
+
+/*************************************************** MODAL WINDOW ***********************************************/
+
+.modal {
+    position: absolute; /* Stay in place */
+    z-index: 1;
+    left: 34%;
+    top: 10%;
+    width: 32%;
+    height: 58%;
+    background-color: rgb(255, 255, 255);
+		border-radius: 10px;
+		border: 2px solid #d3d3d3;
+		overflow: auto;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    padding: 18px;
+		width: 90%;
+		height: 90%;
+		margin: 5px auto;
+}
+
+.modal-image img {
+	display: block;
+	height: 9em;
+	width: 9em;
+	margin: auto;
+	padding: 20px 0;
+	border-radius: 100%;
+	background-repeat: no-repeat;
+}
+
+.modal-text {
+	text-align: center;
+	border-bottom: 2px solid #d3d3d3;
+	margin: auto;
+	width: 90%;
+}
+
+.additional-text {
+	padding: 20px;
+	text-align: center;
+	margin: auto;
+	width: 90%;
+}
+
+.modal-name {
+	margin-top: -5px;
+	margin-bottom: -8px;
+	font-stretch: extra-expanded;
+	font-weight: bold;
+	font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+	font-size: 20px;
+}
+
+.modal-name,
+.modal-city,
+.modal-address {
+	text-transform: capitalize;
+}
+
+.modal-email,
+.modal-city,
+.modal-cell,
+.modal-address,
+.modal-birthday {
+	font-family: Helvetica;
+	font-weight: normal;
+	color: grey;
+}
+
+.modal-cell,
+.modal-address,
+.modal-birthday {
+	margin-bottom: -5px;
+}
+
+.modal-email {
+	font-size: 14px;
+	margin-bottom: -10px;
+}
+
+.modal-city,
+.modal-cell,
+.modal-address,
+.modal-birthday {
+	font-size: 15px;
+}
+
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }
