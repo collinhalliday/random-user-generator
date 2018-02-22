@@ -1,36 +1,29 @@
-$(document).ready(function() {
+// $(document).ready(function() {
 
     //Declaring variables
     const body = document.getElementsByTagName('body')[0];
+    const searchDiv = document.querySelector('.search-div');
     const randomEmployeeGeneratorAPI = 'https://randomuser.me/api/';
     const employeeGrid = document.getElementsByClassName('grid-container');
-    const gridItems = document.getElementsByClassName('grid-item');
     let employeeData;
+    const $searchField = $('#search');
+    const $submitButton = $('#submit');
+    let searchTerm;
+    let filteredEmployees;
 
     //Randomly generating 12 employees through random generation API
     const generatorOptions = {
       url: randomEmployeeGeneratorAPI,
       dataType: 'json',
       results: '12',
-      inc: 'name, location, email, picture, dob, cell, nat',
+      inc: 'name, location, email, picture, dob, cell, login, nat',
     }
-
-    /*
-    Can be used with below $.ajax() function for exact same functionality. Documentation
-    refers to $.getJSON as shorthand for $.ajax().
-    var generatorOptions = $.ajax({
-      url: randomEmployeeGeneratorAPI,
-      dataType: 'json',
-      success: function(data) {
-        displayEmployees(data.results);
-      }
-    });
-    */
 
     $.getJSON(randomEmployeeGeneratorAPI, generatorOptions, displayEmployees);
 
-
+    //Displays employees by creating and appending grid items.
     function displayEmployees(data) {
+      console.log(data);
       if(data.error) {
         let errorMessage = '<p>' + data.error + '</p>';
       } else {
@@ -55,6 +48,7 @@ $(document).ready(function() {
     $(employeeGrid).on('click', function(event) {
       let modalWindow = document.querySelector('#myModal');
       let inGridItem = false;
+      const gridItems = document.getElementsByClassName('grid-item');
       $.each(gridItems, function (index, gridItem) {
         if($.contains(gridItem, event.target))
           inGridItem = true;
@@ -83,6 +77,7 @@ $(document).ready(function() {
                    '"/></div>';
            html += '<div class="modal-text">';
            html += '<p class="modal-name">' + employeeInfo.name.first + ' ' + employeeInfo.name.last + '</p>';
+           html += '<p class="modal-username">' + employeeInfo.login.username + '</p>';
            html += '<p class="modal-email">' + employeeInfo.email + '</p>';
            html += '<p class="modal-city">' + employeeInfo.location.city + '</p>';
            html += '</div>'
@@ -131,4 +126,53 @@ $(document).ready(function() {
       return employeeData[employeeIndex];
     }
 
-}); // end ready
+    //Event Listener: Employee search code
+    $('.search-form').submit(function (event) {
+      $('.search-message').remove();
+      searchTerm = $searchField.val();
+      event.preventDefault();
+      if(searchTerm === ''){
+        createSearchMessage('<p>Please enter a valid search term.</p>');
+      } else {
+          $searchField.prop("disabled", true);
+          $submitButton.attr("disabled", true).val("Searching...");
+          let searchOptions = {
+            url: randomEmployeeGeneratorAPI,
+            dataType: 'json',
+            results: '5000',
+            nat: 'au,gb,ie,nl,nz,us',
+            inc: 'name, location, email, picture, dob, cell, nat, login',
+            }
+          $.getJSON(randomEmployeeGeneratorAPI, searchOptions, employeeSearch);
+          $('.search-message').remove();
+      }
+    }); // end click
+
+    function employeeSearch(data) {
+          filteredEmployees = {results: []};
+          $.each(data.results, function(index, value) {
+            let name = value.name.first + ' ' + value.name.last;
+            if(name.includes(searchTerm.toLowerCase()) ||
+               value.login.username.includes(searchTerm.toLowerCase())) {
+                 filteredEmployees.results.push(value);
+            }
+          });
+          displayEmployees(filteredEmployees);
+          $searchField.prop("disabled", false);
+          $submitButton.attr("disabled", false).val("Search");
+          if (filteredEmployees.results.length === 0) {
+            createSearchMessage('<p>Sorry, there are no employees that match the search term: ' + '"' + searchTerm + '"</p>');
+          } else {
+             createSearchMessage('<p>Your search for "' + searchTerm + '" produced ' +
+             filteredEmployees.results.length + ' results.</p>');
+          }
+    }
+
+    function createSearchMessage(message) {
+      let messageDiv = document.createElement('div');
+      $(messageDiv).html(message);
+      messageDiv.className = 'search-message';
+      searchDiv.appendChild(messageDiv);
+    }
+
+// }); // end ready

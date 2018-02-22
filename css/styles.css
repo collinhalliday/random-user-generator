@@ -1,7 +1,9 @@
 /*************************************************** HEADER *******************************************************/
 h2 {
 	margin-left: 3.5%;
+	margin-top: 5px;
 	font-weight: lighter;
+	display: inline-block;
 }
 
 /*************************************************** GRID **********************************************************/
@@ -19,6 +21,12 @@ h2 {
 	border: 2px solid #d3d3d3;
 	display: block;
 	border-radius: 10px;
+}
+
+.grid-item:hover {
+	border: 2px black solid;
+	/* text-decoration: none; */
+	cursor: pointer;
 }
 
 .image {
@@ -67,10 +75,10 @@ h2 {
 /*************************************************** MODAL WINDOW ***********************************************/
 
 .modal {
-    position: absolute; /* Stay in place */
+    position: fixed;
     z-index: 1;
     left: 34%;
-    top: 10%;
+    top: 11%;
     width: 32%;
     height: 58%;
     background-color: rgb(255, 255, 255);
@@ -126,6 +134,7 @@ h2 {
 	text-transform: capitalize;
 }
 
+.modal-username,
 .modal-email,
 .modal-city,
 .modal-cell,
@@ -142,6 +151,7 @@ h2 {
 	margin-bottom: -5px;
 }
 
+.modal-username,
 .modal-email {
 	font-size: 14px;
 	margin-bottom: -10px;
@@ -167,4 +177,24 @@ h2 {
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+/*************************************************** SEARCH FORM ***********************************************/
+
+.search-div {
+	margin-left: 3.5%;
+	margin-top: -10px;
+	margin-bottom: 10px;
+}
+.search-div form,
+.search-div p {
+	display: inline-block;
+	margin: 0;
+}
+
+.search-message {
+	margin-left: 10%;
+	padding: 0;
+	display: inline-block;
+	font-size: .9em;
 }
