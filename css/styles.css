@@ -179,6 +179,34 @@ h2 {
     cursor: pointer;
 }
 
+/* Next and Previous Buttons */
+.next,
+.previous {
+	text-decoration: none;
+  display: inline-block;
+  padding: 8px 16px;
+	background-color: #f1f1f1;
+  color: black;
+	border-radius: 50%;
+	position: fixed;
+}
+
+.next {
+	right: 35%;
+	top: 61%
+}
+
+.previous {
+	left: 35%;
+	top: 61%
+}
+
+.next:hover,
+.previous:hover {
+	background-color: #ddd;
+  color: black;
+}
+
 /*************************************************** SEARCH FORM ***********************************************/
 
 .search-div {
@@ -197,4 +225,19 @@ h2 {
 	padding: 0;
 	display: inline-block;
 	font-size: .9em;
+}
+
+/*************************************************** MEDIA QUERIES ***********************************************/
+
+@media screen and (max-height: 540px) {
+
+	.modal {
+		top: 61px;
+		height: 300px;
+	}
+
+	.next,
+	.previous {
+        top: 329px;
+    }
 }

@@ -7,8 +7,11 @@
     const employeeGrid = document.getElementsByClassName('grid-container');
     let employeeData;
     let employeeDataPopulated = false;
+    let modalWindow;
+    let employeeIndex;
     const $searchField = $('#search');
     const $submitButton = $('#submit');
+    let filteredSearchOn = false;
     let searchTerm;
     let filteredEmployees;
 
@@ -24,7 +27,6 @@
 
     //Displays employees by creating and appending grid items.
     function displayEmployees(data) {
-      console.log(data);
       if(data.error) {
         let errorMessage = '<p>' + data.error + '</p>';
         $('.grid-container').html(errorMessage);
@@ -34,7 +36,6 @@
             employeeData = data.results;
             employeeDataPopulated = true;
           }
-          console.log(employeeData);
           $.each(data.results, function(index, employee) {
             gridHTML += '<div class="grid-item">';
             gridHTML += '<div class="image" style="background-image: url(' + employee.picture.large + ')"></div>';
@@ -51,7 +52,7 @@
 
     //Event Listener: Calls createModalWindow upon click on particular employee div, and append to page.
     $(employeeGrid).on('click', function(event) {
-      let modalWindow = document.querySelector('#myModal');
+      modalWindow = document.querySelector('#myModal');
       let inGridItem = false;
       const gridItems = document.getElementsByClassName('grid-item');
       $.each(gridItems, function (index, gridItem) {
@@ -62,17 +63,17 @@
         $(modalWindow).remove();
         modalHTML = createModalWindow(event.target);
         body.appendChild(modalHTML);
-        let closeModal = $('.close');
-        $(closeModal).on('click', function(event) {
-          let modalWindow = $(document.querySelector('#myModal')).remove();
-        });
       }
     });
 
     //Creates employee modal window when called based on which employee div is clicked.
-    function createModalWindow(gridItem) {
+    function createModalWindow(employeeItem) {
+      let employeeInfo;
+      if(toString.call(employeeItem) !== "[object Object]")
+        employeeInfo = getEmployeeInfo(employeeItem);
+      else
+        employeeInfo = employeeItem;
       let element = document.createElement('div');
-      let employeeInfo = getEmployeeInfo(gridItem);
       element.className = 'modal';
       element.id = 'myModal';
       let html = '<div class="modal-content">';
@@ -95,9 +96,50 @@
                    employeeInfo.location.postcode + ', ' +
                    employeeInfo.nat + '</p>';
            html += '<p class="modal-birthday">Birthday: ' + formatDate(employeeInfo.dob) + '</p>';
+           html += '<span class="next">&#8250;</span>';
+           html += '<span class="previous">&#8249;</span>';
            html += '</div>'
            html += '</div>';
       element.innerHTML = html;
+
+      $(element).on('click', function(event) {
+        modalWindow = $('#myModal');
+        if(event.target.className === 'next' ||
+           event.target.className === 'previous' ||
+           event.target.className === 'close')
+            $(modalWindow).remove();
+        if(event.target.className === 'next' ||
+           event.target.className === 'previous') {
+             if(filteredSearchOn) {
+               if(event.target.className === 'next') {
+                 if(employeeIndex === filteredEmployees.results.length - 1)
+                   employeeIndex = 0;
+                 else
+                   employeeIndex++;
+               } else if (event.target.className === 'previous') {
+                   if(employeeIndex === 0)
+                     employeeIndex = filteredEmployees.results.length - 1;
+                   else
+                     employeeIndex--;
+               }
+               modalHTML = createModalWindow(filteredEmployees.results[employeeIndex]);
+             } else {
+                 if(event.target.className === 'next') {
+                   if(employeeIndex === employeeData.length - 1)
+                     employeeIndex = 0;
+                   else
+                     employeeIndex++;
+                 } else if (event.target.className === 'previous') {
+                     if(employeeIndex === 0)
+                       employeeIndex = employeeData.length - 1;
+                     else
+                       employeeIndex--;
+                 }
+                  modalHTML = createModalWindow(employeeData[employeeIndex]);
+                }
+            body.appendChild(modalHTML);
+        }
+      });
       return element;
     }
 
@@ -112,7 +154,6 @@
 
     //Finds specific employee in employeeData by using info from employee clicked.
     function getEmployeeInfo(eventTarget) {
-      let employeeIndex;
       let employeePicutreURL;
       let gridItem;
       if(eventTarget.className === 'grid-item')
@@ -123,12 +164,19 @@
       else
         gridItem = eventTarget.parentNode.parentNode;
       employeePicutreURL = gridItem.children[0].style.backgroundImage.replace('url("', '').replace('")', '');
-      for(let i = 0; i < employeeData.length; i++) {
-        if(employeeData[i].picture.large === employeePicutreURL)
-          employeeIndex = i;
+      if(filteredSearchOn) {
+          for(let i = 0; i < filteredEmployees.results.length; i++) {
+            if(filteredEmployees.results[i].picture.large === employeePicutreURL)
+              employeeIndex = i;
+          }
+          return filteredEmployees.results[employeeIndex];
+      } else {
+          for(let i = 0; i < employeeData.length; i++) {
+            if(employeeData[i].picture.large === employeePicutreURL)
+              employeeIndex = i;
+          }
+          return employeeData[employeeIndex];
       }
-      console.log(employeeData[employeeIndex]);
-      return employeeData[employeeIndex];
     }
 
     //Event Listener: Employee search code
@@ -147,6 +195,7 @@
     }); // end click
 
     function employeeSearch(data) {
+          filteredSearchOn = true;
           filteredEmployees = {results: []};
           $.each(data, function(index, value) {
             let name = value.name.first + ' ' + value.name.last;
@@ -174,6 +223,7 @@
             $('.modal').remove();
             $('.exit-search').remove();
             $('.search-message').remove();
+            filteredSearchOn = false;
             displayEmployees({results: employeeData});
           });
     }
