@@ -23,7 +23,22 @@
       inc: 'name, location, email, picture, dob, cell, login, nat',
     }
 
+    //AJAX request
     $.getJSON(randomEmployeeGeneratorAPI, generatorOptions, displayEmployees);
+
+    //Checks for duplicate employee pictures
+    function checkForDuplicates() {
+      let employeeMatches = 0;
+      $.each(employeeData, function(index, employee) {
+        let picture = employee.picture.large;
+        $.each(employeeData, function(index, emp) {
+          if(emp.picture.large === picture)
+            employeeMatches++;
+        });
+      });
+      console.log(employeeMatches);
+      return employeeMatches;
+    }
 
     //Displays employees by creating and appending grid items.
     function displayEmployees(data) {
@@ -36,17 +51,20 @@
             employeeData = data.results;
             employeeDataPopulated = true;
           }
-          $.each(data.results, function(index, employee) {
-            gridHTML += '<div class="grid-item">';
-            gridHTML += '<div class="image" style="background-image: url(' + employee.picture.large + ')"></div>';
-            gridHTML += '<div class="text">';
-            gridHTML += '<p class="name">' + employee.name.first + ' ' + employee.name.last + '</p>';
-            gridHTML += '<p class="email">' + employee.email + '</p>';
-            gridHTML += '<p class="city">' + employee.location.city + '</p>';
-            gridHTML += '</div></div>';
-          }); // end each
-
-          $('.grid-container').html(gridHTML);
+          if(checkForDuplicates() > 12)
+            location.reload();
+          else {
+            $.each(data.results, function(index, employee) {
+              gridHTML += '<div class="grid-item">';
+              gridHTML += '<div class="image" style="background-image: url(' + employee.picture.large + ')"></div>';
+              gridHTML += '<div class="text">';
+              gridHTML += '<p class="name">' + employee.name.first + ' ' + employee.name.last + '</p>';
+              gridHTML += '<p class="email">' + employee.email + '</p>';
+              gridHTML += '<p class="city">' + employee.location.city + '</p>';
+              gridHTML += '</div></div>';
+            }); // end each
+            $('.grid-container').html(gridHTML);
+        }
       }
     }
 
