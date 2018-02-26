@@ -64,6 +64,25 @@
               gridHTML += '</div></div>';
             }); // end each
             $('.grid-container').html(gridHTML);
+
+            //Row highlighting code
+            $.each($('.grid-item'), function(index, gridItem) {
+              if(index % 2 !== 0)
+                gridItem.className += " grid-item-after";
+              else
+                gridItem.className += " grid-item-before";
+              if($(gridItem).hasClass('grid-item-after')) {
+                  $(gridItem).hover(function() {
+                    if ($(window).width() < 1439 &&
+                        $(window).width() > 960)
+                          $(gridItem).prev().toggleClass('special');
+                  }, function() {
+                    if ($(window).width() < 1439 &&
+                        $(window).width() > 960)
+                          $(gridItem).prev().toggleClass('special');
+                  });
+              }
+            });
         }
       }
     }
@@ -176,9 +195,9 @@
     function getEmployeeInfo(eventTarget) {
       let employeePicutreURL;
       let gridItem;
-      if(eventTarget.className === 'grid-item')
+      if($(eventTarget).hasClass('grid-item'))
         gridItem = eventTarget;
-      else if(eventTarget.className === 'image' ||
+      else if($(eventTarget).hasClass('image') ||
               eventTarget.tagName === "DIV")
         gridItem = eventTarget.parentNode;
       else
@@ -200,14 +219,14 @@
     }
 
     function setOverlay() {
-      $('.overlay').css('position', 'absolute');
+      $('.overlay').css('position', 'fixed');
       $('.overlay').css('top', '0px');
       $('.overlay').css('left', '0px');
       $('.overlay').css('width', '100%');
       $('.overlay').css('height', '100%');
       $('.overlay').css('background', '#000');
       $('.overlay').css('opacity', '.50');
-      $('.overlay').css('filter', 'alph(opacity=0)');
+      $('.overlay').css('filter', 'alpha(opacity=0)');
       $('.overlay').css('z-index', '50');
     }
 

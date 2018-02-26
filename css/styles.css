@@ -72,6 +72,10 @@ h2 {
 	font-size: 15px;
 }
 
+.k-grid > table > tbody > tr:hover {
+	background: yellow;
+}
+
 /*************************************************** MODAL WINDOW ***********************************************/
 
 .modal {
@@ -228,6 +232,76 @@ h2 {
 }
 
 /*************************************************** MEDIA QUERIES ***********************************************/
+
+@media screen and (min-width: 1441px) {
+	.grid-item:hover::before {
+		content: "";
+	  position: absolute;
+		left: 3.4%;
+	  background-color: #ffa;
+	  height: 157px;
+	  width: 1340px;
+		margin: auto;
+	  z-index: -1;
+		border-radius: 10px;
+	}
+}
+
+@media screen and (max-width: 1440px) {
+	.grid-item:hover::before {
+		content: "";
+	  position: absolute;
+		left: 3.2%;
+	  background-color: #ffa;
+	  height: 157px;
+	  width: 1335px;
+		margin: auto;
+	  z-index: -1;
+		border-radius: 10px;
+	}
+}
+
+@media screen and (max-width: 1438px) {
+	.grid-item-before:hover::before {
+		content: "";
+	  position: absolute;
+		left: inherit;
+		right: auto;
+	  background-color: #ffa;
+	  height: 159px;
+		width: 880px;
+		margin: auto;
+	  z-index: -1;
+		border-radius: 10px;
+	}
+
+	.grid-item-before.special::before {
+		content: "";
+	  position: absolute;
+		left: inherit;
+		right: auto;
+	  background-color: #ffa;
+	  height: 159px;
+		width: 880px;
+		margin: auto;
+	  z-index: -1;
+		border-radius: 10px;
+	}
+}
+
+@media screen and (max-width: 960px) {
+	.grid-item:hover::before {
+		content: "";
+	  position: absolute;
+		left: inherit;
+	  background-color: #ffa;
+	  height: 159px;
+	  width: 425px;
+		margin: auto;
+	  z-index: -1;
+		border-radius: 10px;
+	}
+}
 
 @media screen and (max-height: 540px) {
 
