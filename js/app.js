@@ -81,6 +81,7 @@
         $(modalWindow).remove();
         modalHTML = createModalWindow(event.target);
         body.appendChild(modalHTML);
+        setOverlay();
       }
     });
 
@@ -122,12 +123,13 @@
 
       $(element).on('click', function(event) {
         modalWindow = $('#myModal');
-        if(event.target.className === 'next' ||
-           event.target.className === 'previous' ||
-           event.target.className === 'close')
+        if(event.target.className === 'close') {
             $(modalWindow).remove();
+            removeOverlay();
+        }
         if(event.target.className === 'next' ||
            event.target.className === 'previous') {
+             $(modalWindow).remove();
              if(filteredSearchOn) {
                if(event.target.className === 'next') {
                  if(employeeIndex === filteredEmployees.results.length - 1)
@@ -197,9 +199,34 @@
       }
     }
 
+    function setOverlay() {
+      $('.overlay').css('position', 'absolute');
+      $('.overlay').css('top', '0px');
+      $('.overlay').css('left', '0px');
+      $('.overlay').css('width', '100%');
+      $('.overlay').css('height', '100%');
+      $('.overlay').css('background', '#000');
+      $('.overlay').css('opacity', '.50');
+      $('.overlay').css('filter', 'alph(opacity=0)');
+      $('.overlay').css('z-index', '50');
+    }
+
+    function removeOverlay() {
+      $('.overlay').css('position', '');
+      $('.overlay').css('top', '');
+      $('.overlay').css('left', '');
+      $('.overlay').css('width', '');
+      $('.overlay').css('height', '');
+      $('.overlay').css('background', '');
+      $('.overlay').css('opacity', '');
+      $('.overlay').css('filter', '');
+      $('.overlay').css('z-index', '');
+    }
+
     //Event Listener: Employee search code
     $('.search-form').submit(function (event) {
       $('.modal').remove();
+      removeOverlay();
       $('.search-message').remove();
       searchTerm = $searchField.val();
       event.preventDefault();
@@ -239,6 +266,7 @@
           $('form').after(exitButton);
           $('.exit-search').on('click', function() {
             $('.modal').remove();
+            removeOverlay();
             $('.exit-search').remove();
             $('.search-message').remove();
             filteredSearchOn = false;

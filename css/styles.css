@@ -76,7 +76,7 @@ h2 {
 
 .modal {
     position: fixed;
-    z-index: 1;
+    z-index: 51;
     left: 34%;
     top: 11%;
     width: 32%;
