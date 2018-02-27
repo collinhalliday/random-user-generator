@@ -67,24 +67,103 @@
 
             //Row highlighting code
             $.each($('.grid-item'), function(index, gridItem) {
-              if(index % 2 !== 0)
-                gridItem.className += " grid-item-after";
+              if(index % 2 === 0)
+                gridItem.className += " even";
               else
-                gridItem.className += " grid-item-before";
-              if($(gridItem).hasClass('grid-item-after')) {
-                  $(gridItem).hover(function() {
-                    if ($(window).width() < 1439 &&
-                        $(window).width() > 960)
-                          $(gridItem).prev().toggleClass('special');
-                  }, function() {
-                    if ($(window).width() < 1439 &&
-                        $(window).width() > 960)
-                          $(gridItem).prev().toggleClass('special');
-                  });
-              }
+                gridItem.className += " odd";
+              if(index % 3 === 0)
+                gridItem.className += " initial";
+              else if(index === 2 ||
+                      index === 5 ||
+                      index === 8 ||
+                      index === 11)
+                        gridItem.className += " right";
+              else
+                gridItem.className += " middle";
             });
+
+            $('.grid-container').mouseover(function(event) {
+              let inGridItem = false;
+              const gridItems = document.getElementsByClassName('grid-item');
+              $.each(gridItems, function (index, gridItem) {
+                if($.contains(gridItem, event.target))
+                  inGridItem = true;
+              });
+                if($(event.target).hasClass('grid-item') || inGridItem) {
+                  let gridItem;
+                  if($(window).width() >= 1424) {
+                      if($(event.target).hasClass('initial') ||
+                         $(event.target.parentNode).hasClass('initial') ||
+                         $(event.target.parentNode.parentNode).hasClass('initial')) {
+                              gridItem = determineGridItem(event.target, 'initial');
+                              applyHighlight(gridItem, $(gridItem).next(), $(gridItem).next().next());
+                      } else if($(event.target).hasClass('middle') ||
+                                $(event.target.parentNode).hasClass('middle') ||
+                                $(event.target.parentNode.parentNode).hasClass('middle')) {
+                                     gridItem = determineGridItem(event.target, 'middle');
+                                     applyHighlight(gridItem, $(gridItem).prev(), $(gridItem).next());
+                      } else if($(event.target).hasClass('right') ||
+                                $(event.target.parentNode).hasClass('right') ||
+                                $(event.target.parentNode.parentNode).hasClass('right')) {
+                                    gridItem = determineGridItem(event.target, 'right');
+                                    applyHighlight(gridItem, $(gridItem).prev(), $(gridItem).prev().prev());
+                      }
+                   } else if($(window).width() < 1424 &&
+                             $(window).width() >= 946) {
+                                if($(event.target).hasClass('even') ||
+                                   $(event.target.parentNode).hasClass('even') ||
+                                   $(event.target.parentNode.parentNode).hasClass('even')) {
+                                      gridItem = determineGridItem(event.target, 'even');
+                                      applyHighlight(gridItem, $(gridItem).next());
+                                } else if($(event.target).hasClass('odd') ||
+                                        $(event.target.parentNode).hasClass('odd') ||
+                                        $(event.target.parentNode.parentNode).hasClass('odd')) {
+                                            gridItem = determineGridItem(event.target, 'odd');
+                                            applyHighlight(gridItem, $(gridItem).prev());
+                                }
+                   } else if ($(window).width() < 946) {
+                       if($(event.target).hasClass('grid-item') ||
+                          $(event.target.parentNode).hasClass('grid-item') ||
+                          $(event.target.parentNode.parentNode).hasClass('grid-item')) {
+                            gridItem = determineGridItem(event.target, 'grid-item');
+                            applyHighlight(gridItem);
+                       }
+                   }
+                }
+              });
+
+              $('.grid-container').mouseout(function(event) {
+                  if($(event.target).hasClass('grid-item') ||
+                     $(event.target.parentNode).hasClass('grid-item') ||
+                     $(event.target.parentNode.parentNode).hasClass('grid-item')) {
+                        $.each($('.grid-item'), function(index, gridItem) {
+                          removeHighlight(gridItem);
+                    });
+                  }
+              });
         }
       }
+    }
+
+    function determineGridItem(eventTarget, className) {
+      if($(eventTarget).hasClass(className))
+        return eventTarget;
+      else if($(eventTarget.parentNode).hasClass(className))
+        return eventTarget.parentNode;
+      else if($(eventTarget.parentNode.parentNode).hasClass(className))
+        return eventTarget.parentNode.parentNode;
+    }
+
+    function applyHighlight(...gridItems) {
+      $.each(gridItems, function(index, gridItem) {
+        $(gridItem).css('background-color', '#ffa');
+      });
+    }
+
+    function removeHighlight(...gridItems) {
+      $.each(gridItems, function(index, gridItem) {
+        $(gridItem).css('background-color', '');
+      });
     }
 
     //Event Listener: Calls createModalWindow upon click on particular employee div, and append to page.
