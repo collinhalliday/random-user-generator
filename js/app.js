@@ -274,6 +274,7 @@
     function getEmployeeInfo(eventTarget) {
       let employeePicutreURL;
       let gridItem;
+      let pictureURL;
       if($(eventTarget).hasClass('grid-item'))
         gridItem = eventTarget;
       else if($(eventTarget).hasClass('image') ||
@@ -281,18 +282,28 @@
         gridItem = eventTarget.parentNode;
       else
         gridItem = eventTarget.parentNode.parentNode;
-      employeePicutreURL = gridItem.children[0].style.backgroundImage.replace('url("', '').replace('")', '');
+      console.log(gridItem.children[0].style.backgroundImage.match(/"/));
+      if(gridItem.children[0].style.backgroundImage.match(/"/))
+        employeePicutreURL = gridItem.children[0].style.backgroundImage.replace('url("', '').replace('")', '');
+      else
+        employeePicutreURL = gridItem.children[0].style.backgroundImage.replace('url(', '').replace(')', '');
+      console.log(employeePicutreURL);
       if(filteredSearchOn) {
           for(let i = 0; i < filteredEmployees.results.length; i++) {
-            if(filteredEmployees.results[i].picture.large === employeePicutreURL)
+            // pictureURL = 'url("' + filteredEmployees.results[i].picture.large + '")';
+            pictureURL = filteredEmployees.results[i].picture.large;
+            if(pictureURL === employeePicutreURL)
               employeeIndex = i;
           }
           return filteredEmployees.results[employeeIndex];
       } else {
           for(let i = 0; i < employeeData.length; i++) {
-            if(employeeData[i].picture.large === employeePicutreURL)
+            // pictureURL = 'url("' + employeeData[i].picture.large + '")';
+            pictureURL = employeeData[i].picture.large;
+            if(pictureURL === employeePicutreURL)
               employeeIndex = i;
           }
+          console.log(employeeIndex);
           return employeeData[employeeIndex];
       }
     }
