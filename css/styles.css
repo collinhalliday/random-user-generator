@@ -25,7 +25,6 @@ h2 {
 
 .grid-item:hover {
 	border: 2px black solid;
-	/* text-decoration: none; */
 	cursor: pointer;
 }
 
@@ -70,10 +69,6 @@ h2 {
 
 .city {
 	font-size: 15px;
-}
-
-.k-grid > table > tbody > tr:hover {
-	background: yellow;
 }
 
 /*************************************************** MODAL WINDOW ***********************************************/
